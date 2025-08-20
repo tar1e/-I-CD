@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Мини-новости</title>
+</head>
+<body>
+  <h1>Новости</h1>
+  <a href="{{ url_for('add_news') }}">Добавить новость</a>
+  <ul>
+    {% for n in news %}
+      <li>
+        <h3>{{ n.title }}</h3>
+        <p>{{ n.content }}</p>
+      </li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
