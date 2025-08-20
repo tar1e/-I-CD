@@ -1,7 +1,4 @@
-from app import app
-
-def test_index():
-    client = app.test_client()
+def test_home(client):
     response = client.get("/")
-    assert response.status_code == 200
-    assert b"Новости" in response.data
+    # response.data — это байты, поэтому строку нужно закодировать в UTF-8
+    assert "Новости".encode("utf-8") in response.data
