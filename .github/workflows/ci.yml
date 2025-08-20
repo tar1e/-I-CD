@@ -1,22 +1,22 @@
-name: CI/CD Flask Docker
+name: CI/CD Flask Docker (Local)
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, build-and-deploy ]
   pull_request:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  build-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
     # 1. Клонируем репозиторий
-    - name: Checkout repository
+    - name: Checkout repo
       uses: actions/checkout@v3
 
     # 2. Устанавливаем Python
-    - name: Set up Python
+    - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: "3.12"
@@ -29,9 +29,15 @@ jobs:
 
     # 4. Прогоняем тесты
     - name: Run tests
-      run: |
-        pytest tests
+      run: pytest tests
 
     # 5. Собираем Docker образ
     - name: Build Docker image
       run: docker build -t flask-app:latest .
+
+    # 6. Перезапуск контейнера (локально)
+    - name: Run container
+      run: |
+        docker stop flask-app || true
+        docker rm flask-app || true
+        docker run -d --name flask-app -p 5000:5000 flask-app:latest
